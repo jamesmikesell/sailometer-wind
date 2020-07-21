@@ -1,0 +1,43 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"bitset": "cpp",
+			"string_view": "cpp",
+			"*.tcc": "cpp",
+			"chrono": "cpp",
+			"complex": "cpp",
+			"unordered_map": "cpp",
+			"algorithm": "cpp",
+			"functional": "cpp",
+			"optional": "cpp",
+			"ratio": "cpp",
+			"system_error": "cpp",
+			"tuple": "cpp",
+			"type_traits": "cpp",
+			"cmath": "cpp",
+			"random": "cpp",
+			"fstream": "cpp",
+			"iomanip": "cpp",
+			"istream": "cpp",
+			"limits": "cpp",
+			"memory": "cpp",
+			"ostream": "cpp",
+			"stdexcept": "cpp",
+			"streambuf": "cpp",
+			"array": "cpp",
+			"utility": "cpp",
+			"typeinfo": "cpp"
+		},
+		"cSpell.words": [
+			"Copercini",
+			"Evandro",
+			"Kolban",
+			"chegewara"
+		]
+	}
+}
