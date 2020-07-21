@@ -30,7 +30,14 @@ BLEServer *pServer = NULL;
 BLECharacteristic *pCharacteristic = NULL;
 bool deviceConnected = false;
 bool oldDeviceConnected = false;
-uint32_t value = 0;
+volatile int rotationsSinceLastCheck = 0;
+volatile long lastTrigger = 0;
+long lastCheck = 0;
+double aMax = 2600;
+double aMin = 1280;
+double bMax = aMax;
+double bMin = aMin;
+long lastSerialPrint = 0;
 
 // See the following for generating UUIDs:
 // https://www.uuidgenerator.net/
@@ -43,6 +50,7 @@ class MyServerCallbacks : public BLEServerCallbacks
   void onConnect(BLEServer *pServer)
   {
     deviceConnected = true;
+    BLEDevice::startAdvertising();
   };
 
   void onDisconnect(BLEServer *pServer)
@@ -51,9 +59,23 @@ class MyServerCallbacks : public BLEServerCallbacks
   }
 };
 
+void rotation_interrupt()
+{
+  long now = millis();
+  if ((now - lastTrigger) < 6)
+    return;
+
+  lastTrigger = now;
+  rotationsSinceLastCheck++;
+}
+
 void setup()
 {
   Serial.begin(115200);
+
+  int speedPin = 21;
+  pinMode(speedPin, INPUT_PULLDOWN);
+  attachInterrupt(speedPin, rotation_interrupt, RISING);
 
   // Create the BLE Device
   BLEDevice::init("ESP32");
@@ -89,16 +111,91 @@ void setup()
   Serial.println("Waiting a client connection to notify...");
 }
 
+int degree(double a, double b)
+{
+  // aMax = std::max(a, aMax);
+  // bMax = std::max(a, bMax);
+  // aMin = std::min(a, aMin);
+  // bMin = std::min(a, bMin);
+
+  int aMid = (aMax + aMin) / 2;
+  int bMid = (bMax + bMin) / 2;
+  int aAmplitude = aMax - aMid;
+  int bAmplitude = bMax - bMid;
+
+  a = (a - aMid) / aAmplitude;
+  b = (b - bMid) / bAmplitude;
+
+  double radians = atan(a / b) / PI;
+
+  double angle;
+  // Quadrants
+  // 4 1
+  // 3 2
+  if (b >= 0)
+  {
+    //quad 1 or 4
+    if (a >= 0)
+    {
+      //quad 1
+      angle = radians;
+    }
+    else
+    {
+      //quad 4
+      angle = 2 + radians;
+    }
+  }
+  else
+  {
+    //quad 2 or 3
+    angle = 1 + radians;
+  }
+
+  return (int)(angle * 100 / 2);
+}
+
+String getValuesSinceLastRead()
+{
+  long now = millis();
+  int count = rotationsSinceLastCheck;
+  rotationsSinceLastCheck = 0;
+
+  String message = "";
+  message.concat("a");
+  message.concat("\t");
+  message.concat(count);
+  message.concat("\t");
+  message.concat(now - lastCheck);
+  message.concat("\t");
+  message.concat(degree(analogRead(39), analogRead(36)));
+
+  lastCheck = now;
+
+  return message;
+}
+
 void loop()
 {
   // notify changed value
   if (deviceConnected)
   {
-    pCharacteristic->setValue((uint8_t *)&value, 4);
+    String message = getValuesSinceLastRead();
+    Serial.println(message);
+    pCharacteristic->setValue(message.c_str());
     pCharacteristic->notify();
-    value++;
     delay(200); // bluetooth stack will go into congestion, if too many packets are sent, in 6 hours test i was able to go as low as 3ms
   }
+  else
+  {
+    long now = millis();
+    if (now - lastSerialPrint > 200)
+    {
+      lastSerialPrint = now;
+      Serial.println(getValuesSinceLastRead());
+    }
+  }
+
   // disconnecting
   if (!deviceConnected && oldDeviceConnected)
   {
@@ -107,6 +204,7 @@ void loop()
     Serial.println("start advertising");
     oldDeviceConnected = deviceConnected;
   }
+
   // connecting
   if (deviceConnected && !oldDeviceConnected)
   {
