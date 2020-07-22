@@ -9,6 +9,10 @@
     "experimentalDecorators": true,
     "module": "esnext",
     "moduleResolution": "node",
+    "noImplicitReturns": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "allowUnreachableCode": false,
     "importHelpers": true,
     "target": "es2015",
     "lib": [
