@@ -42,8 +42,8 @@ long lastSerialPrint = 0;
 // See the following for generating UUIDs:
 // https://www.uuidgenerator.net/
 
-#define SERVICE_UUID "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
-#define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
+#define SERVICE_UUID "e912fa38-f062-4609-b318-9a1fcf116a16"
+#define CHARACTERISTIC_UUID "20beae71-b0f1-48e4-91c4-594339b68a2b"
 
 class MyServerCallbacks : public BLEServerCallbacks
 {
