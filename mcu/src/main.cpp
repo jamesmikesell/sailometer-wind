@@ -78,7 +78,7 @@ void setup()
   attachInterrupt(speedPin, rotation_interrupt, RISING);
 
   // Create the BLE Device
-  BLEDevice::init("ESP32");
+  BLEDevice::init("Sailometer Wind");
 
   // Create the BLE Server
   pServer = BLEDevice::createServer();
