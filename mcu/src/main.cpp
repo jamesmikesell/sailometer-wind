@@ -152,7 +152,7 @@ int degree(double a, double b)
     angle = 1 + radians;
   }
 
-  return (int)(angle * 100 / 2);
+  return (int)(angle * 1000 / 2);
 }
 
 String getValuesSinceLastRead()
@@ -184,7 +184,7 @@ void loop()
     Serial.println(message);
     pCharacteristic->setValue(message.c_str());
     pCharacteristic->notify();
-    delay(200); // bluetooth stack will go into congestion, if too many packets are sent, in 6 hours test i was able to go as low as 3ms
+    delay(50); // bluetooth stack will go into congestion, if too many packets are sent, in 6 hours test i was able to go as low as 3ms
   }
   else
   {
