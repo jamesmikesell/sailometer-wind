@@ -30,7 +30,8 @@ export class MeterComponent implements OnInit {
         {
           namePrefix: "Sailometer Wind"
         }
-      ]
+      ],
+      optionalServices: [this.serviceId]
     };
 
 
