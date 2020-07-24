@@ -35,6 +35,7 @@ export class MeterComponent implements OnInit {
 
     try {
       let device = await navigator.bluetooth.requestDevice(config);
+      device.addEventListener("gattserverdisconnected", event => this.disconnected(event));
       console.log('Connecting to GATT Server...');
       let server = await device.gatt.connect();
       console.log('Getting Service...');
@@ -49,6 +50,10 @@ export class MeterComponent implements OnInit {
     }
   }
 
+  private disconnected(event: Event): void {
+    this.dial.value = 0;
+    this.speed = this.pairMessage;
+  }
 
   handleNotifications(event: Event): void {
     let value: DataView = (event.target as any).value;
