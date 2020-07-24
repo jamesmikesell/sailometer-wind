@@ -48,7 +48,8 @@
 			"Sailometer",
 			"biacsics",
 			"characteristicvaluechanged",
-			"chegewara"
+			"chegewara",
+			"gattserverdisconnected"
 		]
 	}
 }
