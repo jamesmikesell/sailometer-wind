@@ -11,6 +11,7 @@ export class MeterComponent implements OnInit {
   private serviceId = "e912fa38-f062-4609-b318-9a1fcf116a16";
   private characteristicId = "20beae71-b0f1-48e4-91c4-594339b68a2b";
   private decoder = new TextDecoder();
+  private angleOffset = 15.4;
 
   @ViewChild("uxDial") private dial: RadialGauge;
 
@@ -56,7 +57,7 @@ export class MeterComponent implements OnInit {
     data.rotationInterval = Number(parts[1]);
     data.angle = Number(parts[2]);
 
-    let angle = (data.angle / 1000) * 360 - 180;
+    let angle = ((data.angle / 1000) * 360 - 180) - this.angleOffset;
     this.dial.value = angle;
   }
 }
