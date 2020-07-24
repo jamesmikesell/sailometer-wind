@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { RadialGauge } from '@biacsics/ng-canvas-gauges';
 
 @Component({
   selector: 'app-meter',
@@ -10,7 +11,8 @@ export class MeterComponent implements OnInit {
   private serviceId = "e912fa38-f062-4609-b318-9a1fcf116a16";
   private characteristicId = "20beae71-b0f1-48e4-91c4-594339b68a2b";
   private decoder = new TextDecoder();
-  turn = 0;
+
+  @ViewChild("uxDial") private dial: RadialGauge;
 
   constructor() { }
 
@@ -55,7 +57,8 @@ export class MeterComponent implements OnInit {
     data.time = Number(parts[2]);
     data.angle = Number(parts[3]);
 
-    this.turn = data.angle / 1000;
+    let angle = (data.angle / 1000) * 360 - 180;
+    this.dial.value = angle;
   }
 }
 
