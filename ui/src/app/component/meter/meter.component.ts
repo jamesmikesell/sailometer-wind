@@ -17,6 +17,7 @@ export class MeterComponent implements OnInit {
 
   @ViewChild("uxDial") private dial: RadialGauge;
   speed = this.pairMessage;
+  log = "";
 
   constructor() { }
 
@@ -36,18 +37,23 @@ export class MeterComponent implements OnInit {
     try {
       let device = await navigator.bluetooth.requestDevice(config);
       device.addEventListener("gattserverdisconnected", event => this.disconnected(event));
-      console.log('Connecting to GATT Server...');
+      this.logToUi('Connecting to GATT Server...');
       let server = await device.gatt.connect();
-      console.log('Getting Service...');
+      this.logToUi('Getting Service...');
       let service = await server.getPrimaryService(this.serviceId);
-      console.log('Getting Characteristic...');
+      this.logToUi('Getting Characteristic...');
       let characteristic = await service.getCharacteristic(this.characteristicId);
       await characteristic.startNotifications();
-      console.log('> Notifications started');
+      this.logToUi('> Notifications started');
       characteristic.addEventListener('characteristicvaluechanged', event => this.handleNotifications(event));
     } catch (error) {
-      console.error(error);
+      this.logToUi(error);
     }
+  }
+
+  private logToUi(message: string): void {
+    console.log(message);
+    this.log += message + "\n";
   }
 
   private disconnected(event: Event): void {
