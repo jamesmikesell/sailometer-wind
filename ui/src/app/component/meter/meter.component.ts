@@ -53,9 +53,8 @@ export class MeterComponent implements OnInit {
     let parts = message.split("\t");
 
     let data = new SensorData();
-    data.revolutions = Number(parts[1]);
-    data.time = Number(parts[2]);
-    data.angle = Number(parts[3]);
+    data.rotationInterval = Number(parts[1]);
+    data.angle = Number(parts[2]);
 
     let angle = (data.angle / 1000) * 360 - 180;
     this.dial.value = angle;
@@ -63,7 +62,6 @@ export class MeterComponent implements OnInit {
 }
 
 class SensorData {
-  revolutions: number;
-  time: number;
   angle: number;
+  rotationInterval: number;
 }

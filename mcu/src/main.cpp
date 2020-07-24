@@ -30,8 +30,8 @@ BLEServer *pServer = NULL;
 BLECharacteristic *pCharacteristic = NULL;
 bool deviceConnected = false;
 bool oldDeviceConnected = false;
-volatile int rotationsSinceLastCheck = 0;
-volatile long lastTrigger = 0;
+volatile unsigned long lastRotation = 0;
+volatile unsigned long rotationInterval = ULONG_MAX;
 long lastCheck = 0;
 double aMax = 2600;
 double aMin = 1280;
@@ -62,11 +62,11 @@ class MyServerCallbacks : public BLEServerCallbacks
 void rotation_interrupt()
 {
   long now = millis();
-  if ((now - lastTrigger) < 6)
+  if ((now - lastRotation) < 6)
     return;
 
-  lastTrigger = now;
-  rotationsSinceLastCheck++;
+  rotationInterval = now - lastRotation;
+  lastRotation = now;
 }
 
 void setup()
@@ -157,16 +157,17 @@ int degree(double a, double b)
 
 String getValuesSinceLastRead()
 {
-  long now = millis();
-  int count = rotationsSinceLastCheck;
-  rotationsSinceLastCheck = 0;
+  unsigned long now = millis();
+  unsigned long currentInterval = std::max(now - lastRotation, (unsigned long)rotationInterval);
 
   String message = "";
   message.concat("a");
   message.concat("\t");
-  message.concat(count);
-  message.concat("\t");
-  message.concat(now - lastCheck);
+  // assume infinate interval (RPM of 0) if rotation time greater than 20 seconds
+  if (currentInterval < 20000)
+  {
+    message.concat(currentInterval);
+  }
   message.concat("\t");
   message.concat(degree(analogRead(39), analogRead(36)));
 
