@@ -1,7 +1,7 @@
 <div (click)="initBt()">
 
 
-    <radial-gauge width="400" height="400" #uxDial min-value="-180" max-value="180" stroke-ticks="true"
+    <radial-gauge #uxDial width="400" height="400" min-value="-180" max-value="180" stroke-ticks="true"
         highlights='[ {"from": -45, "to": 0, "color": "rgba(255, 0, 0, .3)"}, {"from": 0, "to": 45, "color": "rgba(0, 255, 0, .3)"} ]'
         ticks-angle="360" major-ticks=" , 150, 120, 90, 60, 30, , 30, 60, 90, 120, 150, " minor-ticks="3"
         start-angle="0" color-major-ticks="#ddd" color-minor-ticks="#ddd" color-title="#eee" color-units="#ccc"
@@ -11,7 +11,7 @@
         color-border-middle-end="#111" color-border-inner="#111" color-border-inner-end="#333"
         color-needle-shadow-down="#333" color-needle-circle-outer="#333" color-needle-circle-outer-end="#111"
         color-needle-circle-inner="#111" color-needle-circle-inner-end="#222" color-value-box-rect="#222"
-        color-value-box-rect-end="#333" value-box="false"></radial-gauge>
-
+        color-value-box-rect-end="#333" value-box="true" [options]="{valueText: speed}">
+    </radial-gauge>
 </div>
 

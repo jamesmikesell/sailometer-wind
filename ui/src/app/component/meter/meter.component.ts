@@ -12,8 +12,11 @@ export class MeterComponent implements OnInit {
   private characteristicId = "20beae71-b0f1-48e4-91c4-594339b68a2b";
   private decoder = new TextDecoder();
   private angleOffset = 15.4;
+  private rpmPerKnot = 1;
+  private pairMessage = "Click to Pair";
 
   @ViewChild("uxDial") private dial: RadialGauge;
+  speed = this.pairMessage;
 
   constructor() { }
 
@@ -59,6 +62,13 @@ export class MeterComponent implements OnInit {
 
     let angle = ((data.angle / 1000) * 360 - 180) - this.angleOffset;
     this.dial.value = angle;
+
+    let rpm = 0;
+    if (data.rotationInterval)
+      rpm = 1 / (data.rotationInterval / 60000);
+
+    //Having a character is necessary as without it, when speed gets to 0, the gauge will start displaying the wind angle instead
+    this.speed = (rpm / this.rpmPerKnot).toFixed(1) + " k";
   }
 }
 
