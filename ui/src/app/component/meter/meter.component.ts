@@ -18,13 +18,34 @@ export class MeterComponent implements OnInit {
   @ViewChild("uxDial") private dial: RadialGauge;
   speed = this.pairMessage;
   log = "";
+  groundSpeed: number;
+  heading: number;
 
   constructor() { }
 
   ngOnInit(): void {
   }
 
-  async initBt(): Promise<void> {
+  async init(): Promise<void> {
+    await this.initBt();
+    this.initGps();
+  }
+
+  private initGps(): void {
+    let options: PositionOptions = {
+      enableHighAccuracy: true,
+      maximumAge: 0
+    };
+
+    navigator.geolocation.watchPosition(position => this.handlePosition(position), undefined, options);
+  }
+
+  private handlePosition(position: Position): void {
+    this.groundSpeed = position.coords.speed;
+    this.heading = position.coords.heading;
+  }
+
+  private async initBt(): Promise<void> {
     let config: RequestDeviceOptions = {
       filters: [
         {
