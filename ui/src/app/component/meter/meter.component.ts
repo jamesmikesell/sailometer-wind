@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { RadialGauge } from '@biacsics/ng-canvas-gauges';
+import { Component, OnInit } from '@angular/core';
+import { WIND_METER_CONFIG } from './meter-config';
 
 @Component({
   selector: 'app-meter',
@@ -15,14 +15,13 @@ export class MeterComponent implements OnInit {
   private rpmPerKnot = 1;
   private pairMessage = "Click to Pair";
   private groundSpeed: number;
-
-  @ViewChild("uxDial") private dial: RadialGauge;
-  apparentWindSpeedDisplay = this.pairMessage;
-  groundSpeedDisplay = "---";
-  headingDisplay = "---";
-  trueWindSpeedDisplay = "---";
-
-  highlights: CanvasGauges.Highlight[] = [
+  private dial: Gauge;
+  private trueWindMarker = {
+    from: -2.5,
+    to: 2.5,
+    color: "rgba(255, 255, 0, 1)"
+  };
+  private highlights = [
     {
       from: -45,
       to: 0,
@@ -31,12 +30,22 @@ export class MeterComponent implements OnInit {
       from: 0,
       to: 45,
       color: "rgba(0, 255, 0, .3)"
-    }
+    },
+    this.trueWindMarker
   ];
+
+  groundSpeedDisplay = "---";
+  headingDisplay = "---";
+  trueWindSpeedDisplay = "---";
 
   constructor() { }
 
   ngOnInit(): void {
+    let config = WIND_METER_CONFIG;
+    config.valueText = this.pairMessage
+    config.highlights = this.highlights
+
+    this.dial = new RadialGauge(config).draw();
   }
 
   async init(): Promise<void> {
@@ -97,7 +106,7 @@ export class MeterComponent implements OnInit {
 
   private bluetoothDisconnected(event: Event): void {
     this.dial.value = 0;
-    this.apparentWindSpeedDisplay = this.pairMessage;
+    this.dial.options.valueText = this.pairMessage;
   }
 
   private handleBluetoothNotification(event: Event): void {
@@ -118,13 +127,20 @@ export class MeterComponent implements OnInit {
 
     let apparentWindSpeed = (rpm / this.rpmPerKnot);
     //Having a character is necessary as without it, when speed gets to 0, the gauge will start displaying the wind angle instead
-    this.apparentWindSpeedDisplay = apparentWindSpeed.toFixed(1) + " k";
+    this.dial.options.valueText = apparentWindSpeed.toFixed(1) + " k";
 
 
     if (this.groundSpeed != null) {
       let trueWind = TrueWindCalculations.calculateTrueWind(apparentWindSpeed, apparentWindAngle, this.groundSpeed);
       if (!isNaN(trueWind.trueWindSpeed)) {
         this.trueWindSpeedDisplay = trueWind.trueWindSpeed.toFixed(1);
+        let a = trueWind.trueWindAngle - 2.5;
+        let b = trueWind.trueWindAngle + 2.5;
+        this.trueWindMarker.from = Math.round(Math.min(a, b));
+        this.trueWindMarker.to = Math.round(Math.max(a, b));
+        this.dial.update({
+          highlights: this.highlights
+        });
       } else {
         this.clearTrueWindAngle();
       }
@@ -135,6 +151,9 @@ export class MeterComponent implements OnInit {
 
   private clearTrueWindAngle(): void {
     this.trueWindSpeedDisplay = "---";
+    this.trueWindMarker.from = 0;
+    this.trueWindMarker.to = 0;
+    this.dial.update({ highlights: this.highlights });
   }
 }
 
