@@ -12,7 +12,7 @@ export class MeterComponent implements OnInit {
   private characteristicId = "20beae71-b0f1-48e4-91c4-594339b68a2b";
   private decoder = new TextDecoder();
   private angleOffset = 15.4;
-  private rpmPerKnot = 1;
+  private rpmPerKnot = 22.7375;
   private pairMessage = "Click to Pair";
   private groundSpeed: number;
   private dial: Gauge;
