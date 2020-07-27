@@ -36,3 +36,29 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+$foreground-palette: map-get($candy-app-theme, foreground);
+$secondary-text-color: mat-color($foreground-palette, secondary-text);
+
+
+.item-list {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -30px;
+  margin-top: -10px;
+}
+
+.item-list>* {
+  margin-left: 30px;
+  margin-top: 10px;
+}
+
+.item-list>*>:first-child {
+  color: $secondary-text-color;
+  font-size: 1em;
+  margin-bottom: 18px;
+}
+
+.item-list>*>:nth-child(2) {
+  font-size: 4.5em;
+}

@@ -1,19 +1,23 @@
 <div (click)="init()">
 
 
-    <radial-gauge #uxDial width="400" height="400" min-value="-180" max-value="180" stroke-ticks="true"
-        highlights='[ {"from": -45, "to": 0, "color": "rgba(255, 0, 0, .3)"}, {"from": 0, "to": 45, "color": "rgba(0, 255, 0, .3)"} ]'
-        ticks-angle="360" major-ticks=" , 150, 120, 90, 60, 30, , 30, 60, 90, 120, 150, " minor-ticks="3"
-        start-angle="0" color-major-ticks="#ddd" color-minor-ticks="#ddd" color-title="#eee" color-units="#ccc"
-        color-numbers="#eee" color-plate="#222" border-shadow-width="0" borders="true" needle-type="arrow"
-        needle-width="2" needle-circle-size="7" needle-circle-outer="true" needle-circle-inner="false" animation="false"
-        color-border-outer="#333" color-border-outer-end="#111" color-border-middle="#222"
-        color-border-middle-end="#111" color-border-inner="#111" color-border-inner-end="#333"
-        color-needle-shadow-down="#333" color-needle-circle-outer="#333" color-needle-circle-outer-end="#111"
-        color-needle-circle-inner="#111" color-needle-circle-inner-end="#222" color-value-box-rect="#222"
-        color-value-box-rect-end="#333" value-box="true" [options]="{valueText: speed}">
-    </radial-gauge>
-</div>
+    <canvas id="dialId"></canvas>
 
-<div>{{groundSpeed}}</div>
-<div>{{heading}}</div>
+
+    <div class="item-list">
+        <div>
+            <div>SOG (kt)</div>
+            <div>{{groundSpeedDisplay}}</div>
+        </div>
+        <div>
+            <div>True Wind (kt)</div>
+            <div>{{trueWindSpeedDisplay}}</div>
+        </div>
+        <div>
+            <div>Heading</div>
+            <div>{{headingDisplay}}</div>
+        </div>
+    </div>
+
+
+</div>

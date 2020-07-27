@@ -7,7 +7,6 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { GaugesModule } from '@biacsics/ng-canvas-gauges';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MeterComponent } from './component/meter/meter.component';
@@ -29,7 +28,6 @@ import { NavComponent } from './component/nav/nav.component';
     MatButtonModule,
     MatSidenavModule,
     MatIconModule,
-    GaugesModule,
     MatListModule
   ],
   providers: [],

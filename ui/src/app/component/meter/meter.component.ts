@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { RadialGauge } from '@biacsics/ng-canvas-gauges';
+import { Component, OnInit } from '@angular/core';
+import { WIND_METER_CONFIG } from './meter-config';
 
 @Component({
   selector: 'app-meter',
@@ -12,18 +12,40 @@ export class MeterComponent implements OnInit {
   private characteristicId = "20beae71-b0f1-48e4-91c4-594339b68a2b";
   private decoder = new TextDecoder();
   private angleOffset = 15.4;
-  private rpmPerKnot = 1;
+  private rpmPerKnot = 22.7375;
   private pairMessage = "Click to Pair";
+  private groundSpeed: number;
+  private dial: Gauge;
+  private trueWindMarker = {
+    from: -2.5,
+    to: 2.5,
+    color: "rgba(255, 255, 0, 1)"
+  };
+  private highlights = [
+    {
+      from: -45,
+      to: 0,
+      color: "rgba(255, 0, 0, .3)"
+    }, {
+      from: 0,
+      to: 45,
+      color: "rgba(0, 255, 0, .3)"
+    },
+    this.trueWindMarker
+  ];
 
-  @ViewChild("uxDial") private dial: RadialGauge;
-  speed = this.pairMessage;
-  log = "";
-  groundSpeed: number;
-  heading: number;
+  groundSpeedDisplay = "---";
+  headingDisplay = "---";
+  trueWindSpeedDisplay = "---";
 
   constructor() { }
 
   ngOnInit(): void {
+    let config = WIND_METER_CONFIG;
+    config.valueText = this.pairMessage
+    config.highlights = this.highlights
+
+    this.dial = new RadialGauge(config).draw();
   }
 
   async init(): Promise<void> {
@@ -41,8 +63,13 @@ export class MeterComponent implements OnInit {
   }
 
   private handlePosition(position: Position): void {
-    this.groundSpeed = position.coords.speed;
-    this.heading = position.coords.heading;
+    let knotsPerMeterPerSecond = 1.94384;
+    this.groundSpeed = position.coords.speed * knotsPerMeterPerSecond;
+    this.groundSpeedDisplay = this.groundSpeed.toFixed(1);
+    if (position.coords.heading != null)
+      this.headingDisplay = position.coords.heading.toFixed(0);
+    else
+      this.headingDisplay = "---";
   }
 
   private async initBt(): Promise<void> {
@@ -58,54 +85,113 @@ export class MeterComponent implements OnInit {
 
     try {
       let device = await navigator.bluetooth.requestDevice(config);
-      device.addEventListener("gattserverdisconnected", event => this.disconnected(event));
-      this.logToUi('Connecting to GATT Server...');
+      device.addEventListener("gattserverdisconnected", event => this.bluetoothDisconnected(event));
+      this.log('Connecting to GATT Server...');
       let server = await device.gatt.connect();
-      this.logToUi('Getting Service...');
+      this.log('Getting Service...');
       let service = await server.getPrimaryService(this.serviceId);
-      this.logToUi('Getting Characteristic...');
+      this.log('Getting Characteristic...');
       let characteristic = await service.getCharacteristic(this.characteristicId);
       await characteristic.startNotifications();
-      this.logToUi('> Notifications started');
-      characteristic.addEventListener('characteristicvaluechanged', event => this.handleNotifications(event));
+      this.log('> Notifications started');
+      characteristic.addEventListener('characteristicvaluechanged', event => this.handleBluetoothNotification(event));
     } catch (error) {
-      this.logToUi(error);
+      this.log(error);
     }
   }
 
-  private logToUi(message: string): void {
+  private log(message: string): void {
     console.log(message);
-    this.log += message + "\n";
   }
 
-  private disconnected(event: Event): void {
+  private bluetoothDisconnected(event: Event): void {
     this.dial.value = 0;
-    this.speed = this.pairMessage;
+    this.dial.options.valueText = this.pairMessage;
   }
 
-  handleNotifications(event: Event): void {
+  private handleBluetoothNotification(event: Event): void {
     let value: DataView = (event.target as any).value;
 
     let message = this.decoder.decode(value);
     let parts = message.split("\t");
 
-    let data = new SensorData();
-    data.rotationInterval = Number(parts[1]);
-    data.angle = Number(parts[2]);
+    let rotationInterval = Number(parts[1]);
+    let angleRaw = Number(parts[2]);
 
-    let angle = ((data.angle / 1000) * 360 - 180) - this.angleOffset;
-    this.dial.value = angle;
+    let apparentWindAngle = ((angleRaw / 1000) * 360 - 180) - this.angleOffset;
+    this.dial.value = apparentWindAngle;
 
     let rpm = 0;
-    if (data.rotationInterval)
-      rpm = 1 / (data.rotationInterval / 60000);
+    if (rotationInterval)
+      rpm = 1 / (rotationInterval / 60000);
 
+    let apparentWindSpeed = (rpm / this.rpmPerKnot);
     //Having a character is necessary as without it, when speed gets to 0, the gauge will start displaying the wind angle instead
-    this.speed = (rpm / this.rpmPerKnot).toFixed(1) + " k";
+    this.dial.options.valueText = apparentWindSpeed.toFixed(1) + " k";
+
+
+    if (this.groundSpeed != null) {
+      let trueWind = TrueWindCalculations.calculateTrueWind(apparentWindSpeed, apparentWindAngle, this.groundSpeed);
+      if (!isNaN(trueWind.trueWindSpeed)) {
+        this.trueWindSpeedDisplay = trueWind.trueWindSpeed.toFixed(1);
+        let a = trueWind.trueWindAngle - 2.5;
+        let b = trueWind.trueWindAngle + 2.5;
+        this.trueWindMarker.from = Math.round(Math.min(a, b));
+        this.trueWindMarker.to = Math.round(Math.max(a, b));
+        this.dial.update({
+          highlights: this.highlights
+        });
+      } else {
+        this.clearTrueWindAngle();
+      }
+    } else {
+      this.clearTrueWindAngle();
+    }
+  }
+
+  private clearTrueWindAngle(): void {
+    this.trueWindSpeedDisplay = "---";
+    this.trueWindMarker.from = 0;
+    this.trueWindMarker.to = 0;
+    this.dial.update({ highlights: this.highlights });
   }
 }
 
-class SensorData {
-  angle: number;
-  rotationInterval: number;
+class TrueWind {
+  constructor(
+    public trueWindSpeed: number,
+    public trueWindAngle: number
+  ) { }
+}
+
+class TrueWindCalculations {
+  static calculateTrueWind(apparentWindSpeed: number, apparentWindAngle: number, groundSpeed: number): TrueWind {
+    if (apparentWindAngle === 0) {
+      let trueWindSpeed = apparentWindSpeed - groundSpeed;
+      let trueWindAngle = 0;
+      return new TrueWind(trueWindSpeed, trueWindAngle);
+    }
+    if (Math.abs(apparentWindAngle) === 180) {
+      let trueWindSpeed = apparentWindSpeed + groundSpeed;
+      let trueWindAngle = 180;
+      return new TrueWind(trueWindSpeed, trueWindAngle);
+    }
+
+    let aws = apparentWindSpeed;
+    let awa = (180 - Math.abs(apparentWindAngle)) * Math.PI / 180;
+    let sog = groundSpeed;
+    let trueWindSpeed = (aws / Math.sin(awa)) * Math.sin(Math.PI - awa - Math.asin(sog * Math.sin(awa) / aws));
+    /**
+     * Solving for true wind in certain circumstances can result in 2 plausible speeds... I don't think the second value is
+     * value, however this would be how it's calculated
+     *
+     * let trueWindSpeed2 = (aws / Math.sin(awa)) * Math.sin(Math.asin(sog * Math.sin(awa) / aws) - awa);
+     */
+
+    let trueWindAngle = (Math.asin(Math.sin(awa) / aws * sog) / Math.PI * 180) + Math.abs(apparentWindAngle);
+    if (apparentWindAngle < 0)
+      trueWindAngle = trueWindAngle * -1;
+
+    return new TrueWind(trueWindSpeed, trueWindAngle);
+  }
 }
