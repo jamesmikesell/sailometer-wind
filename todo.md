@@ -1,4 +1,3 @@
-1. no sleep
 1. better debounce on mcu
 1. fixed width on number displays to prevent wrapping when values change
 1. handle 0 and 180 apparent wind headings in true wind calculations

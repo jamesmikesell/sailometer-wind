@@ -51,6 +51,7 @@ export class MeterComponent implements OnInit {
   async init(): Promise<void> {
     await this.initBt();
     this.initGps();
+    navigator.wakeLock.request("screen");
   }
 
   private initGps(): void {
