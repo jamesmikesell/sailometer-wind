@@ -13,7 +13,6 @@ export class MeterComponent implements OnInit {
   private decoder = new TextDecoder();
   private angleOffset = 15.4;
   private rpmPerKnot = 22.7375;
-  private pairMessage = "Click to Pair";
   private groundSpeed: number;
   private dial: Gauge;
   private trueWindMarker = {
@@ -37,13 +36,14 @@ export class MeterComponent implements OnInit {
   groundSpeedDisplay = "---";
   headingDisplay = "---";
   trueWindSpeedDisplay = "---";
+  apparentWindSpeedDisplay = "---";
 
   constructor() { }
 
   ngOnInit(): void {
     let config = WIND_METER_CONFIG;
-    config.valueText = this.pairMessage
-    config.highlights = this.highlights
+    config.valueText = "Click to Pair";
+    config.highlights = this.highlights;
 
     this.dial = new RadialGauge(config).draw();
   }
@@ -83,6 +83,7 @@ export class MeterComponent implements OnInit {
       optionalServices: [this.serviceId]
     };
 
+    this.dial.update({ valueBox: false });
 
     try {
       let device = await navigator.bluetooth.requestDevice(config);
@@ -97,6 +98,7 @@ export class MeterComponent implements OnInit {
       this.log('> Notifications started');
       characteristic.addEventListener('characteristicvaluechanged', event => this.handleBluetoothNotification(event));
     } catch (error) {
+      this.dial.update({ valueBox: true });
       this.log(error);
     }
   }
@@ -107,7 +109,7 @@ export class MeterComponent implements OnInit {
 
   private bluetoothDisconnected(event: Event): void {
     this.dial.value = 0;
-    this.dial.options.valueText = this.pairMessage;
+    this.dial.update({ valueBox: true });
   }
 
   private handleBluetoothNotification(event: Event): void {
@@ -127,8 +129,7 @@ export class MeterComponent implements OnInit {
       rpm = 1 / (rotationInterval / 60000);
 
     let apparentWindSpeed = (rpm / this.rpmPerKnot);
-    //Having a character is necessary as without it, when speed gets to 0, the gauge will start displaying the wind angle instead
-    this.dial.options.valueText = apparentWindSpeed.toFixed(1) + " k";
+    this.apparentWindSpeedDisplay = apparentWindSpeed.toFixed(1);
 
 
     if (this.groundSpeed != null) {
