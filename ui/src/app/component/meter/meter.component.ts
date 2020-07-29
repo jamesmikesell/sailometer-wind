@@ -15,6 +15,7 @@ export class MeterComponent implements OnInit {
   private rpmPerKnot = 22.7375;
   private groundSpeed: number;
   private dial: Gauge;
+  private unadjustedSensorAngle: number;
   private trueWindMarker = {
     from: -2.5,
     to: 2.5,
@@ -46,6 +47,10 @@ export class MeterComponent implements OnInit {
     config.highlights = this.highlights;
 
     this.dial = new RadialGauge(config).draw();
+  }
+
+  setCenterWindAngle(): void {
+    this.angleOffset = this.unadjustedSensorAngle
   }
 
   async init(): Promise<void> {
@@ -83,10 +88,10 @@ export class MeterComponent implements OnInit {
       optionalServices: [this.serviceId]
     };
 
-    this.dial.update({ valueBox: false });
 
     try {
       let device = await navigator.bluetooth.requestDevice(config);
+      this.dial.update({ valueBox: false });
       device.addEventListener("gattserverdisconnected", event => this.bluetoothDisconnected(event));
       this.log('Connecting to GATT Server...');
       let server = await device.gatt.connect();
@@ -108,8 +113,11 @@ export class MeterComponent implements OnInit {
   }
 
   private bluetoothDisconnected(event: Event): void {
+    this.trueWindSpeedDisplay = "---";
+    this.apparentWindSpeedDisplay = "---";
     this.dial.value = 0;
     this.dial.update({ valueBox: true });
+    this.clearTrueWindAngle();
   }
 
   private handleBluetoothNotification(event: Event): void {
@@ -121,7 +129,8 @@ export class MeterComponent implements OnInit {
     let rotationInterval = Number(parts[1]);
     let angleRaw = Number(parts[2]);
 
-    let apparentWindAngle = ((angleRaw / 1000) * 360 - 180) - this.angleOffset;
+    this.unadjustedSensorAngle = ((angleRaw / 1000) * 360 - 180);
+    let apparentWindAngle = this.unadjustedSensorAngle - this.angleOffset;
     this.dial.value = apparentWindAngle;
 
     let rpm = 0;
