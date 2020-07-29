@@ -1,4 +1,3 @@
-1. better debounce on mcu
 1. add ability to set angle offset from UI
 1. allow for setting red/green angle from UI
 1. add ability to set rpm/kt from UI

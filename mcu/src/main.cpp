@@ -32,6 +32,7 @@ bool deviceConnected = false;
 bool oldDeviceConnected = false;
 volatile unsigned long lastRotation = 0;
 volatile unsigned long rotationInterval = ULONG_MAX;
+volatile byte intervalSkipped = 0;
 long lastCheck = 0;
 double aMax = 2600;
 double aMin = 1280;
@@ -61,12 +62,23 @@ class MyServerCallbacks : public BLEServerCallbacks
 
 void rotation_interrupt()
 {
-  long now = millis();
-  if ((now - lastRotation) < 6)
+  unsigned long now = millis();
+  unsigned long newInterval = now - lastRotation;
+  if (newInterval < 6)
     return;
 
-  rotationInterval = now - lastRotation;
   lastRotation = now;
+
+  double ratio = ((double)rotationInterval) / newInterval;
+  if (rotationInterval < 1500 && ratio > 1.5 && intervalSkipped < 4)
+  {
+    intervalSkipped++;
+    return;
+  }
+
+  intervalSkipped = 0;
+
+  rotationInterval = newInterval;
 }
 
 void setup()
@@ -75,7 +87,7 @@ void setup()
 
   int speedPin = 21;
   pinMode(speedPin, INPUT_PULLDOWN);
-  attachInterrupt(speedPin, rotation_interrupt, RISING);
+  attachInterrupt(digitalPinToInterrupt(speedPin), rotation_interrupt, RISING);
 
   // Create the BLE Device
   BLEDevice::init("Sailometer Wind");
