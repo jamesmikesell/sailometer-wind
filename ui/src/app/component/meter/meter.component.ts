@@ -68,7 +68,7 @@ export class MeterComponent implements OnInit {
     navigator.geolocation.watchPosition(position => this.handlePosition(position), undefined, options);
   }
 
-  private handlePosition(position: Position): void {
+  private handlePosition(position: GeolocationPosition): void {
     let knotsPerMeterPerSecond = 1.94384;
     this.groundSpeed = position.coords.speed * knotsPerMeterPerSecond;
     this.groundSpeedDisplay = this.groundSpeed.toFixed(1);
