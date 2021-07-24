@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
-import { environment } from '../../../environments/environment';
+import { AppVersion } from 'src/app/app-version';
 
 @Component({
   selector: 'app-nav',
@@ -12,7 +12,7 @@ import { environment } from '../../../environments/environment';
 export class NavComponent {
 
   private breakpoints = [Breakpoints.Handset];
-  version = environment.version
+  version = AppVersion.VERSION;
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(this.breakpoints)
     .pipe(

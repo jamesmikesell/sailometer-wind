@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "startExternal": "ng serve --host 0.0.0.0 --ssl --ssl-key localhost.key --ssl-cert localhost.crt",
-    "build": "node ./build/build-pre.js && rm -rf ../docs && rm -rf dist && ng build --configuration production --base-href \"/sailometer-wind/\" && mv dist/ui ../docs",
+    "build": "ng build --configuration production --base-href \"/sailometer-wind/\" ",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
