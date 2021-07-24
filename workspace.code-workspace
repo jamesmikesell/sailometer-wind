@@ -33,6 +33,9 @@
 			"utility": "cpp",
 			"typeinfo": "cpp"
 		},
+		"eslint.workingDirectories": [
+			"ui"
+		],
 		"cSpell.words": [
 			"Copercini",
 			"Evandro",
