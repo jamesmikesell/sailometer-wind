@@ -127,7 +127,9 @@ export class MeterComponent implements OnInit {
     let parts = message.split("\t");
 
     let rotationInterval = Number(parts[1]);
-    let angleRaw = Number(parts[2]);
+    let rotationSensorA = Number(parts[2]);
+    let rotationSensorB = Number(parts[3]);
+    let angleRaw = this.degrees(rotationSensorA, rotationSensorB);
 
     this.unadjustedSensorAngle = ((angleRaw / 1000) * 360 - 180);
     let apparentWindAngle = this.unadjustedSensorAngle - this.angleOffset;
@@ -166,6 +168,47 @@ export class MeterComponent implements OnInit {
     this.trueWindMarker.to = 0;
     this.dial.update({ highlights: this.highlights });
   }
+
+  private degrees(a: number, b: number): number {
+    const aMax = 2600;
+    const aMin = 1280;
+    const bMax = aMax;
+    const bMin = aMin;
+
+
+    let aMid = (aMax + aMin) / 2;
+    let bMid = (bMax + bMin) / 2;
+    let aAmplitude = aMax - aMid;
+    let bAmplitude = bMax - bMid;
+
+    a = (a - aMid) / aAmplitude;
+    b = (b - bMid) / bAmplitude;
+
+    let radians = Math.atan(a / b) / Math.PI;
+
+    let angle: number;
+    // Quadrants
+    // 4 1
+    // 3 2
+    if (b >= 0) {
+      //quad 1 or 4
+      if (a >= 0) {
+        //quad 1
+        angle = radians;
+      }
+      else {
+        //quad 4
+        angle = 2 + radians;
+      }
+    }
+    else {
+      //quad 2 or 3
+      angle = 1 + radians;
+    }
+
+    return (angle * 1000 / 2);
+  }
+
 }
 
 class TrueWind {

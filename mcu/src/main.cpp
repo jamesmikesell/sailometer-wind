@@ -34,10 +34,6 @@ volatile unsigned long lastRotation = 0;
 volatile unsigned long rotationInterval = ULONG_MAX;
 volatile byte intervalSkipped = 0;
 long lastCheck = 0;
-double aMax = 2600;
-double aMin = 1280;
-double bMax = aMax;
-double bMin = aMin;
 long lastSerialPrint = 0;
 
 // See the following for generating UUIDs:
@@ -45,6 +41,9 @@ long lastSerialPrint = 0;
 
 #define SERVICE_UUID "e912fa38-f062-4609-b318-9a1fcf116a16"
 #define CHARACTERISTIC_UUID "20beae71-b0f1-48e4-91c4-594339b68a2b"
+#define ANALOG_A 39
+#define ANALOG_B 36
+#define SPEED_PIN 21
 
 class MyServerCallbacks : public BLEServerCallbacks
 {
@@ -85,9 +84,8 @@ void setup()
 {
   Serial.begin(115200);
 
-  int speedPin = 21;
-  pinMode(speedPin, INPUT_PULLDOWN);
-  attachInterrupt(digitalPinToInterrupt(speedPin), rotation_interrupt, RISING);
+  pinMode(SPEED_PIN, INPUT_PULLDOWN);
+  attachInterrupt(digitalPinToInterrupt(SPEED_PIN), rotation_interrupt, RISING);
 
   // Create the BLE Device
   BLEDevice::init("Sailometer Wind");
@@ -123,50 +121,6 @@ void setup()
   Serial.println("Waiting a client connection to notify...");
 }
 
-int degree(double a, double b)
-{
-  // aMax = std::max(a, aMax);
-  // bMax = std::max(a, bMax);
-  // aMin = std::min(a, aMin);
-  // bMin = std::min(a, bMin);
-
-  int aMid = (aMax + aMin) / 2;
-  int bMid = (bMax + bMin) / 2;
-  int aAmplitude = aMax - aMid;
-  int bAmplitude = bMax - bMid;
-
-  a = (a - aMid) / aAmplitude;
-  b = (b - bMid) / bAmplitude;
-
-  double radians = atan(a / b) / PI;
-
-  double angle;
-  // Quadrants
-  // 4 1
-  // 3 2
-  if (b >= 0)
-  {
-    //quad 1 or 4
-    if (a >= 0)
-    {
-      //quad 1
-      angle = radians;
-    }
-    else
-    {
-      //quad 4
-      angle = 2 + radians;
-    }
-  }
-  else
-  {
-    //quad 2 or 3
-    angle = 1 + radians;
-  }
-
-  return (int)(angle * 1000 / 2);
-}
-
 String getValuesSinceLastRead()
 {
   unsigned long now = millis();
@@ -181,7 +135,9 @@ String getValuesSinceLastRead()
     message.concat(currentInterval);
   }
   message.concat("\t");
-  message.concat(degree(analogRead(39), analogRead(36)));
+  message.concat(analogRead(ANALOG_A));
+  message.concat("\t");
+  message.concat(analogRead(ANALOG_B));
 
   lastCheck = now;
 
