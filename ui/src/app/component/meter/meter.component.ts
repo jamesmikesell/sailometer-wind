@@ -99,10 +99,6 @@ export class MeterComponent implements OnInit, OnDestroy {
     this.destroy.complete();
   }
 
-  setCenterWindAngle(): void {
-    this.infoService.setCenterWindAngle();
-  }
-
   async init(): Promise<void> {
     navigator.wakeLock.request("screen");
     this.infoService.init();

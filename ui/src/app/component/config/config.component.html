@@ -1,0 +1,57 @@
+<div class="page-margin">
+
+  <h1>Wind Angle Adjustments</h1>
+
+  <!-- <input type="text" [(ngModel)]="infoService.angleOffset">  -->
+
+  <div>
+    <mat-form-field appearance="fill" class="small-input">
+      <mat-label>Wind Angle Offset</mat-label>
+      <input type="number" matInput [(ngModel)]="infoService.angleOffset">
+    </mat-form-field>
+  </div>
+
+
+  <div>
+    <button mat-raised-button (click)="center()" color="warn" class="center">Center Wind Angle</button>
+  </div>
+
+
+  
+  <div class="sensor-a">
+    <h1>Wind Angle Sensors</h1>
+    <mat-form-field appearance="fill" class="small-input">
+      <mat-label>Sensor A Min</mat-label>
+      <mat-hint>Min Observed: {{infoService.aMinObserved === Number.MAX_VALUE ? '∞' : infoService.aMinObserved}}
+      </mat-hint>
+      <input type="number" matInput [(ngModel)]="infoService.aMin">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="small-input margin-left">
+      <mat-label>Sensor A Max</mat-label>
+      <mat-hint>Max Observed: {{infoService.aMaxObserved}}</mat-hint>
+      <input type="number" matInput [(ngModel)]="infoService.aMax">
+    </mat-form-field>
+  </div>
+
+
+  <div class="sensor-b">
+    <mat-form-field appearance="fill" class="small-input">
+      <mat-label>Sensor B Min</mat-label>
+      <mat-hint>Min Observed: {{infoService.bMinObserved === Number.MAX_VALUE ? '∞' : infoService.bMinObserved}}
+      </mat-hint>
+      <input type="number" matInput [(ngModel)]="infoService.bMin">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="small-input margin-left">
+      <mat-label>Sensor B Max</mat-label>
+      <mat-hint>Max Observed: {{infoService.bMaxObserved}}</mat-hint>
+      <input type="number" matInput [(ngModel)]="infoService.bMax">
+    </mat-form-field>
+  </div>
+
+
+  <div>
+    <button mat-raised-button (click)="useObserved()" color="warn" class="center">Use Observed Values</button>
+  </div>
+</div>

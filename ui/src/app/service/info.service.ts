@@ -9,13 +9,23 @@ export class InfoService {
   private serviceId = "e912fa38-f062-4609-b318-9a1fcf116a16";
   private characteristicId = "20beae71-b0f1-48e4-91c4-594339b68a2b";
   private decoder = new TextDecoder();
-  private angleOffset = 15.4;
-  private rpmPerKnot = 22.7375;
   private groundSpeed: number;
   private unadjustedSensorAngle: number;
+
+
   connection = new BehaviorSubject<boolean>(false);
   windInfo = new Subject<WindInfo>();
   positionInfo = new Subject<PositionInfo>();
+  aMax = 2600;
+  aMin = 1280;
+  bMax = this.aMax;
+  bMin = this.aMin;
+  aMaxObserved = 0;
+  aMinObserved = Number.MAX_VALUE;
+  bMaxObserved = 0;
+  bMinObserved = Number.MAX_VALUE;
+  angleOffset = 15.4;
+
 
   constructor() { }
 
@@ -43,6 +53,12 @@ export class InfoService {
     let rotationInterval = Number(parts[1]);
     let rotationSensorA = Number(parts[2]);
     let rotationSensorB = Number(parts[3]);
+
+    this.aMaxObserved = Math.max(rotationSensorA, this.aMaxObserved);
+    this.bMaxObserved = Math.max(rotationSensorB, this.bMaxObserved);
+    this.aMinObserved = Math.min(rotationSensorA, this.aMinObserved);
+    this.bMinObserved = Math.min(rotationSensorB, this.bMinObserved);
+
     let angleRaw = this.analogSensorToDegrees(rotationSensorA, rotationSensorB);
 
     this.unadjustedSensorAngle = ((angleRaw / 1000) * 360 - 180);
@@ -54,7 +70,8 @@ export class InfoService {
     if (rotationInterval)
       rpm = 1 / (rotationInterval / 60000);
 
-    let apparentWindSpeed = (rpm / this.rpmPerKnot);
+    let rpmPerKnot = 22.7375;
+    let apparentWindSpeed = (rpm / rpmPerKnot);
     windInfo.apparentWindSpeedKnots = apparentWindSpeed;
 
 
@@ -71,16 +88,10 @@ export class InfoService {
   }
 
   private analogSensorToDegrees(a: number, b: number): number {
-    const aMax = 2600;
-    const aMin = 1280;
-    const bMax = aMax;
-    const bMin = aMin;
-
-
-    let aMid = (aMax + aMin) / 2;
-    let bMid = (bMax + bMin) / 2;
-    let aAmplitude = aMax - aMid;
-    let bAmplitude = bMax - bMid;
+    let aMid = (this.aMax + this.aMin) / 2;
+    let bMid = (this.bMax + this.bMin) / 2;
+    let aAmplitude = this.aMax - aMid;
+    let bAmplitude = this.bMax - bMid;
 
     a = (a - aMid) / aAmplitude;
     b = (b - bMid) / bAmplitude;
