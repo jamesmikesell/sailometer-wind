@@ -2,14 +2,6 @@
 	"folders": [
 		{
 			"path": "."
-		},
-		{
-			"name": "mcu",
-			"path": "mcu"
-		},
-		{
-			"name": "ui",
-			"path": "ui"
 		}
 	],
 	"settings": {
