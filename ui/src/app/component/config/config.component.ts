@@ -28,4 +28,8 @@ export class ConfigComponent implements OnInit {
     this.infoService.aMin = this.infoService.aMinObserved;
     this.infoService.bMin = this.infoService.bMinObserved;
   }
+
+  clearSettings(): void {
+    localStorage.clear();
+  }
 }

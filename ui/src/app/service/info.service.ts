@@ -11,23 +11,66 @@ export class InfoService {
   private decoder = new TextDecoder();
   private groundSpeed: number;
   private unadjustedSensorAngle: number;
+  private readonly SENSOR_A_MIN = "sensorAMin";
+  private readonly SENSOR_A_MAX = "sensorAMax";
+  private readonly SENSOR_B_MIN = "sensorBMin";
+  private readonly SENSOR_B_MAX = "sensorBMax";
+  private readonly ANGLE_OFFSET = "angleOffset";
 
 
   connection = new BehaviorSubject<boolean>(false);
   windInfo = new Subject<WindInfo>();
   positionInfo = new Subject<PositionInfo>();
-  aMax = 2600;
-  aMin = 1280;
-  bMax = this.aMax;
-  bMin = this.aMin;
+
+  private _aMin: number;
+  get aMin(): number { return this._aMin; }
+  set aMin(val: number) {
+    localStorage.setItem(this.SENSOR_A_MIN, "" + val);
+    this._aMin = val;
+  }
+
+  private _aMax: number;
+  get aMax(): number { return this._aMax; }
+  set aMax(val: number) {
+    localStorage.setItem(this.SENSOR_A_MAX, "" + val);
+    this._aMax = val;
+  }
+
+  private _bMin: number;
+  get bMin(): number { return this._bMin; }
+  set bMin(val: number) {
+    localStorage.setItem(this.SENSOR_B_MIN, "" + val);
+    this._bMin = val;
+  }
+
+  private _bMax: number;
+  get bMax(): number { return this._bMax; }
+  set bMax(val: number) {
+    localStorage.setItem(this.SENSOR_B_MAX, "" + val);
+    this._bMax = val;
+  }
+
+  private _angleOffset: number;
+  get angleOffset(): number { return this._angleOffset; }
+  set angleOffset(val: number) {
+    localStorage.setItem(this.ANGLE_OFFSET, "" + val);
+    this._angleOffset = val;
+  }
+
   aMaxObserved = 0;
   aMinObserved = Number.MAX_VALUE;
   bMaxObserved = 0;
   bMinObserved = Number.MAX_VALUE;
-  angleOffset = 15.4;
 
 
-  constructor() { }
+
+  constructor() {
+    this.aMin = Number(localStorage.getItem(this.SENSOR_A_MIN) ?? 1280);
+    this.aMax = Number(localStorage.getItem(this.SENSOR_A_MAX) ?? 2600);
+    this.bMin = Number(localStorage.getItem(this.SENSOR_B_MIN) ?? 1280);
+    this.bMax = Number(localStorage.getItem(this.SENSOR_B_MAX) ?? 2600);
+    this.angleOffset = Number(localStorage.getItem(this.ANGLE_OFFSET) ?? 15.4);
+  }
 
 
   async init(): Promise<void> {
