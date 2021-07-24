@@ -41,9 +41,9 @@ long lastSerialPrint = 0;
 
 #define SERVICE_UUID "e912fa38-f062-4609-b318-9a1fcf116a16"
 #define CHARACTERISTIC_UUID "20beae71-b0f1-48e4-91c4-594339b68a2b"
-#define ANALOG_A 39
-#define ANALOG_B 36
-#define SPEED_PIN 21
+int ANALOG_A = GPIO_NUM_39;
+int ANALOG_B = GPIO_NUM_36;
+int SPEED_PIN = GPIO_NUM_21;
 
 class MyServerCallbacks : public BLEServerCallbacks
 {
@@ -59,7 +59,7 @@ class MyServerCallbacks : public BLEServerCallbacks
   }
 };
 
-void rotation_interrupt()
+void rotationInterrupt()
 {
   unsigned long now = millis();
   unsigned long newInterval = now - lastRotation;
@@ -85,7 +85,7 @@ void setup()
   Serial.begin(115200);
 
   pinMode(SPEED_PIN, INPUT_PULLDOWN);
-  attachInterrupt(digitalPinToInterrupt(SPEED_PIN), rotation_interrupt, RISING);
+  attachInterrupt(digitalPinToInterrupt(SPEED_PIN), rotationInterrupt, RISING);
 
   // Create the BLE Device
   BLEDevice::init("Sailometer Wind");
