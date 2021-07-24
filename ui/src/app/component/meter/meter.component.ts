@@ -21,6 +21,7 @@ export class MeterComponent implements OnInit {
     to: 2.5,
     color: "rgba(255, 255, 0, 1)"
   };
+  private connected = false;
   private highlights = [
     {
       from: -45,
@@ -54,7 +55,11 @@ export class MeterComponent implements OnInit {
   }
 
   async init(): Promise<void> {
+    if (this.connected)
+      return;
+
     await this.initBt();
+    this.connected = true;
     this.initGps();
     navigator.wakeLock.request("screen");
   }
@@ -113,6 +118,7 @@ export class MeterComponent implements OnInit {
   }
 
   private bluetoothDisconnected(event: Event): void {
+    this.connected = false;
     this.trueWindSpeedDisplay = "---";
     this.apparentWindSpeedDisplay = "---";
     this.dial.value = 0;
