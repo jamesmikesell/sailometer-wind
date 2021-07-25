@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { InfoService } from 'src/app/service/info.service';
@@ -46,6 +46,7 @@ export class MeterComponent implements OnInit, OnDestroy {
     config.highlights = this.highlights;
 
     this.dial = new RadialGauge(config).draw();
+    this.resizeGauge();
 
     this.infoService.connection
       .pipe(takeUntil(this.destroy))
@@ -97,6 +98,17 @@ export class MeterComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy.next();
     this.destroy.complete();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  resizeGauge(): void {
+    // Height less nav bar
+    let screenMin = Math.min(window.innerWidth, window.innerHeight - 65);
+    let size = Math.min(screenMin, 600);
+    this.dial.update({
+      width: size,
+      height: size
+    });
   }
 
   async init(): Promise<void> {

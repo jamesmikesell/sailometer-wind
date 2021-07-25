@@ -1,27 +1,24 @@
-<div (click)="init()">
+<div (click)="init()" class="gauge-and-info">
+  <canvas id="dialId"></canvas>
 
-
-    <canvas id="dialId"></canvas>
-
-
+  <div class="info-list">
     <div class="item-list">
-        <div>
-            <div>SOG (kt)</div>
-            <div>{{groundSpeedDisplay}}</div>
-        </div>
-        <div>
-            <div>AWS (kt)</div>
-            <div>{{apparentWindSpeedDisplay}}</div>
-        </div>
-        <div>
-            <div>TWS (kt)</div>
-            <div>{{trueWindSpeedDisplay}}</div>
-        </div>
-        <div>
-            <div>COG (deg)</div>
-            <div>{{headingDisplay}}</div>
-        </div>
+      <div>
+        <div>SOG (kt)</div>
+        <div>{{groundSpeedDisplay}}</div>
+      </div>
+      <div>
+        <div>AWS (kt)</div>
+        <div>{{apparentWindSpeedDisplay}}</div>
+      </div>
+      <div>
+        <div>TWS (kt)</div>
+        <div>{{trueWindSpeedDisplay}}</div>
+      </div>
+      <div>
+        <div>COG (deg)</div>
+        <div>{{headingDisplay}}</div>
+      </div>
     </div>
-
-
+  </div>
 </div>

@@ -1,3 +1,18 @@
+.gauge-and-info {
+  display: flex;
+  flex-flow: wrap;
+  margin-left: -10px;
+}
+
+.gauge-and-info>* {
+  margin-left: 10px;
+}
+
+.info-list{
+  width: min-content;
+  flex-grow: 1;
+}
+
 .item-list {
   justify-content: space-between;
 }
