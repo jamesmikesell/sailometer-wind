@@ -12,7 +12,10 @@
       <a mat-list-item [routerLink]="['/config']" (click)="closeIfMobile(drawer)">Config</a>
     </mat-nav-list>
 
-    <sub>version: {{version}}</sub>
+    <div class="app-version">
+      version: {{version}}
+    </div>
+
   </mat-sidenav>
 
 
