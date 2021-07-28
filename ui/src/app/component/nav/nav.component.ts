@@ -3,6 +3,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { AppVersion } from 'src/app/app-version';
+import { TitleService } from 'src/app/service/title.service';
 
 @Component({
   selector: 'app-nav',
@@ -20,7 +21,10 @@ export class NavComponent {
       shareReplay()
     );
 
-  constructor(private breakpointObserver: BreakpointObserver) { }
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+    public titleService: TitleService
+  ) { }
 
   closeIfMobile(drawer: any): void {
     if (this.breakpointObserver.isMatched(this.breakpoints))

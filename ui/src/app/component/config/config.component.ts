@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { InfoService } from 'src/app/service/info.service';
+import { TitleService } from 'src/app/service/title.service';
 
 @Component({
   selector: 'app-config',
@@ -12,10 +13,12 @@ export class ConfigComponent implements OnInit {
   Number = Number;
 
   constructor(
-    public infoService: InfoService
+    public infoService: InfoService,
+    private titleService: TitleService
   ) { }
 
   ngOnInit(): void {
+    this.titleService.title = "Configuration";
   }
 
   center(): void {

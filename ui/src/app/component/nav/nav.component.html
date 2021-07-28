@@ -28,6 +28,10 @@
     </div>
     <!-- </mat-toolbar> -->
 
+    <div class="title" *ngIf="titleService.title">
+      {{titleService.title}}
+    </div>
+
     <router-outlet></router-outlet>
 
   </mat-sidenav-content>

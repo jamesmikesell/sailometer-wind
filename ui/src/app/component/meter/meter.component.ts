@@ -2,6 +2,7 @@ import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { InfoService } from 'src/app/service/info.service';
+import { TitleService } from 'src/app/service/title.service';
 import { WIND_METER_CONFIG } from './meter-config';
 
 @Component({
@@ -37,7 +38,8 @@ export class MeterComponent implements OnInit, OnDestroy {
   apparentWindSpeedDisplay = "---";
 
   constructor(
-    private infoService: InfoService
+    private infoService: InfoService,
+    private titleService: TitleService
   ) { }
 
   ngOnInit(): void {
@@ -93,6 +95,8 @@ export class MeterComponent implements OnInit, OnDestroy {
           this.headingDisplay = "---";
       });
 
+
+    this.titleService.title = "";
   }
 
   ngOnDestroy(): void {
