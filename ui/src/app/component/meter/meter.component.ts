@@ -102,8 +102,7 @@ export class MeterComponent implements OnInit, OnDestroy {
 
   @HostListener('window:resize', ['$event'])
   resizeGauge(): void {
-    // Height less nav bar
-    let screenMin = Math.min(window.innerWidth, window.innerHeight - 65);
+    let screenMin = Math.min(window.innerWidth, window.innerHeight);
     let size = Math.min(screenMin, 600);
     this.dial.update({
       width: size,
