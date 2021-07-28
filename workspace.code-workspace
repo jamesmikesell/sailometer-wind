@@ -44,7 +44,8 @@
 			"biacsics",
 			"characteristicvaluechanged",
 			"chegewara",
-			"gattserverdisconnected"
+			"gattserverdisconnected",
+			"sidenav"
 		]
 	}
 }
