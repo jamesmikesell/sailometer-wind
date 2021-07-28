@@ -1,6 +1,7 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { FontSizeService } from 'src/app/service/font-size.service';
 import { InfoService } from 'src/app/service/info.service';
 import { TitleService } from 'src/app/service/title.service';
 import { WIND_METER_CONFIG } from './meter-config';
@@ -39,6 +40,7 @@ export class MeterComponent implements OnInit, OnDestroy {
 
   constructor(
     private infoService: InfoService,
+    public fontService: FontSizeService,
     private titleService: TitleService
   ) { }
 

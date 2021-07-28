@@ -4,20 +4,32 @@
   <div class="info-list">
     <div class="item-list">
       <div>
-        <div>SOG (kt)</div>
-        <div>{{groundSpeedDisplay}}</div>
+        <div>TWS (kt)</div>
+        <div [style.font-size]="fontService.fontSize + 'em'" [style.width]="(fontService.fontSize * 8.43 * 4) + 'px'"
+          class="mono">
+          {{trueWindSpeedDisplay}}
+        </div>
       </div>
       <div>
         <div>AWS (kt)</div>
-        <div>{{apparentWindSpeedDisplay}}</div>
+        <div [style.font-size]="fontService.fontSize + 'em'" [style.width]="(fontService.fontSize * 8.43 * 4) + 'px'"
+          class="mono">
+          {{apparentWindSpeedDisplay}}
+        </div>
       </div>
       <div>
-        <div>TWS (kt)</div>
-        <div>{{trueWindSpeedDisplay}}</div>
+        <div>SOG (kt)</div>
+        <div [style.font-size]="fontService.fontSize + 'em'" [style.width]="(fontService.fontSize * 8.43 * 4) + 'px'"
+          class="mono">
+          {{groundSpeedDisplay}}
+        </div>
       </div>
       <div>
         <div>COG (deg)</div>
-        <div>{{headingDisplay}}</div>
+        <div [style.font-size]="fontService.fontSize + 'em'" [style.width]="(fontService.fontSize * 8.43 * 4) + 'px'"
+          class="mono">
+          {{headingDisplay}}
+        </div>
       </div>
     </div>
   </div>

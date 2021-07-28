@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { AppVersion } from 'src/app/app-version';
 import { TitleService } from 'src/app/service/title.service';
+import { FontSizeService } from 'src/app/service/font-size.service';
 
 @Component({
   selector: 'app-nav',
@@ -23,12 +24,17 @@ export class NavComponent {
 
   constructor(
     private breakpointObserver: BreakpointObserver,
+    public fontService: FontSizeService,
     public titleService: TitleService
   ) { }
 
   closeIfMobile(drawer: any): void {
     if (this.breakpointObserver.isMatched(this.breakpoints))
       drawer.toggle();
+  }
+
+  increaseFont(amount: number): void {
+    this.fontService.fontSize = Math.max(this.fontService.fontSize + amount, .1);
   }
 
 }

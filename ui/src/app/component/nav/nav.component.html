@@ -7,10 +7,23 @@
 
     <mat-nav-list>
       <a mat-list-item [routerLink]="['/']" (click)="closeIfMobile(drawer)">Meter</a>
-    </mat-nav-list>
-    <mat-nav-list>
+
       <a mat-list-item [routerLink]="['/config']" (click)="closeIfMobile(drawer)">Config</a>
+
+      <mat-list-item role="listitem">
+        <button mat-mini-fab (click)="increaseFont(-.25)" color="primary" aria-label="decrease font size">
+          <mat-icon>remove</mat-icon>
+        </button>
+        &nbsp;&nbsp;
+        Font {{fontService.fontSize}}x
+        &nbsp;&nbsp;
+        <button mat-mini-fab (click)="increaseFont(.25)" color="primary" aria-label="increase font size">
+          <mat-icon>add</mat-icon>
+        </button>
+      </mat-list-item>
     </mat-nav-list>
+
+
 
     <div class="app-version">
       version: {{version}}
@@ -20,13 +33,11 @@
 
 
   <mat-sidenav-content>
-    <!-- <mat-toolbar color="primary"> -->
     <div class="menu-button-header">
       <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
     </div>
-    <!-- </mat-toolbar> -->
 
     <div class="title" *ngIf="titleService.title">
       {{titleService.title}}
