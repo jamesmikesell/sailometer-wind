@@ -6,6 +6,7 @@ import { AppVersion } from 'src/app/app-version';
 import { TitleService } from 'src/app/service/title.service';
 import { FontSizeService } from 'src/app/service/font-size.service';
 import { Router } from '@angular/router';
+import { ThemeService } from 'src/app/service/theme.service';
 
 @Component({
   selector: 'app-nav',
@@ -27,6 +28,7 @@ export class NavComponent {
     private breakpointObserver: BreakpointObserver,
     private router: Router,
     public fontService: FontSizeService,
+    private themeService: ThemeService,
     public titleService: TitleService
   ) { }
 
@@ -41,5 +43,9 @@ export class NavComponent {
 
   menuClick(): void {
     this.router.navigate(["/"]);
+  }
+
+  toggleTheme(): void {
+    this.themeService.darkMode = !this.themeService.darkMode;
   }
 }

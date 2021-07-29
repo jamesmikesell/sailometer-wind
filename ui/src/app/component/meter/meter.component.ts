@@ -3,6 +3,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { FontSizeService } from 'src/app/service/font-size.service';
 import { InfoService } from 'src/app/service/info.service';
+import { ThemeService } from 'src/app/service/theme.service';
 import { TitleService } from 'src/app/service/title.service';
 import { WIND_METER_CONFIG } from './meter-config';
 
@@ -38,11 +39,16 @@ export class MeterComponent implements OnInit, OnDestroy {
   trueWindSpeedDisplay = "---";
   apparentWindSpeedDisplay = "---";
 
+
+
   constructor(
     private infoService: InfoService,
     public fontService: FontSizeService,
+    private themeService: ThemeService,
     private titleService: TitleService
   ) { }
+
+
 
   ngOnInit(): void {
     let config = WIND_METER_CONFIG;
@@ -95,6 +101,30 @@ export class MeterComponent implements OnInit, OnDestroy {
           this.headingDisplay = positionInfo.headingDegrees.toFixed(0);
         else
           this.headingDisplay = "---";
+      });
+
+    this.themeService.darkModeSubscription
+      .pipe(takeUntil(this.destroy))
+      .subscribe(darkMode => {
+        if (darkMode) {
+          this.dial.update({
+            colorMajorTicks: "#fff",
+            colorMinorTicks: "#fff",
+            colorNumbers: "#fff",
+            colorPlate: "#000",
+            colorNeedle: "#fff",
+            colorNeedleEnd: "#fff",
+          });
+        } else {
+          this.dial.update({
+            colorMajorTicks: "#000",
+            colorMinorTicks: "#000",
+            colorNumbers: "#000",
+            colorPlate: "#fff",
+            colorNeedle: "#000",
+            colorNeedleEnd: "#000",
+          });
+        }
       });
 
 

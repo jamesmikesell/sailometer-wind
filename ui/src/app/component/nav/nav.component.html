@@ -10,6 +10,8 @@
 
       <a mat-list-item [routerLink]="['/config']" (click)="closeIfMobile(drawer)">Config</a>
 
+      <a mat-list-item (click)="toggleTheme(); closeIfMobile(drawer)">Toggle Theme</a>
+
       <mat-list-item role="listitem">
         <button mat-mini-fab (click)="increaseFont(-.25)" color="primary" aria-label="decrease font size">
           <mat-icon>remove</mat-icon>

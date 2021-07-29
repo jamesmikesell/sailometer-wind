@@ -13,7 +13,7 @@ interface Gauge {
 interface GaugeConfig {
     value?: number;
     valueText?: string;
-    highlights?: { from: number; to: number; color: string; }[];
+    highlights?: { from: number; to: number; color: string }[];
     renderTo?: string;
     width?: number;
     height?: number;
@@ -44,6 +44,8 @@ interface GaugeConfig {
     colorBorderMiddleEnd?: string;
     colorBorderInner?: string;
     colorBorderInnerEnd?: string;
+    colorNeedle?: string;
+    colorNeedleEnd?: string;
     colorNeedleShadowDown?: string;
     colorNeedleCircleOuter?: string;
     colorNeedleCircleOuterEnd?: string;

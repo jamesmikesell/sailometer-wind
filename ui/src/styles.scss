@@ -20,12 +20,26 @@ $candy-app-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
 $candy-app-warn: mat.define-palette(mat.$red-palette);
 
 /* // Create the theme object (a Sass map containing all of the palettes). */
-$candy-app-theme: mat.define-dark-theme($candy-app-primary, $candy-app-accent, $candy-app-warn);
+$dark-theme: mat.define-dark-theme($candy-app-primary, $candy-app-accent, $candy-app-warn);
+$light-theme: mat.define-light-theme($candy-app-primary, $candy-app-accent, $candy-app-warn);
+
+$foreground-palette-dark: map-get($dark-theme, foreground);
+$secondary-text-color-dark: mat.get-color-from-palette($foreground-palette-dark, secondary-text);
+$foreground-palette-light: map-get($light-theme, foreground);
+$secondary-text-color-light: mat.get-color-from-palette($foreground-palette-light, secondary-text);
 
 /* // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using. */
-@include mat.all-component-themes($candy-app-theme);
+.app-dark-theme {
+  @include mat.all-component-themes($dark-theme);
+}
+
+.app-light-theme {
+  @include mat.all-component-themes($light-theme);
+}
+
+
 
 html,
 body {
@@ -41,8 +55,6 @@ body {
   font-family: "Roboto Mono", monospace;
 }
 
-$foreground-palette: map-get($candy-app-theme, foreground);
-$secondary-text-color: mat.get-color-from-palette($foreground-palette, secondary-text);
 
 
 .item-list {
@@ -58,10 +70,17 @@ $secondary-text-color: mat.get-color-from-palette($foreground-palette, secondary
 }
 
 .item-list>*>:first-child {
-  color: $secondary-text-color;
   font-size: 1em;
   margin-bottom: 18px;
   margin-top: 16px;
+}
+
+.app-dark-theme .item-list>*>:first-child {
+  color: $secondary-text-color-dark;
+}
+
+.app-light-theme .item-list>*>:first-child {
+  color: $secondary-text-color-light;
 }
 
 .item-list>*>:nth-child(2) {
