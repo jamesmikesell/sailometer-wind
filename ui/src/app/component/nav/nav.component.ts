@@ -5,6 +5,7 @@ import { map, shareReplay } from 'rxjs/operators';
 import { AppVersion } from 'src/app/app-version';
 import { TitleService } from 'src/app/service/title.service';
 import { FontSizeService } from 'src/app/service/font-size.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-nav',
@@ -24,6 +25,7 @@ export class NavComponent {
 
   constructor(
     private breakpointObserver: BreakpointObserver,
+    private router: Router,
     public fontService: FontSizeService,
     public titleService: TitleService
   ) { }
@@ -37,4 +39,7 @@ export class NavComponent {
     this.fontService.fontSize = Math.max(this.fontService.fontSize + amount, .1);
   }
 
+  menuClick(): void {
+    this.router.navigate(["/"]);
+  }
 }

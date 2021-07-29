@@ -3,7 +3,7 @@
   <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'">
 
-    <mat-toolbar>Sailometer Wind</mat-toolbar>
+    <mat-toolbar (click)="menuClick(); closeIfMobile(drawer)">Sailometer Wind</mat-toolbar>
 
     <mat-nav-list>
       <a mat-list-item [routerLink]="['/']" (click)="closeIfMobile(drawer)">Meter</a>
