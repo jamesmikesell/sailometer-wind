@@ -1,0 +1,89 @@
+{
+  "configVersion": 1,
+  "timestamp": 1627572491550,
+  "index": "/sailometer-wind/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/sailometer-wind/favicon.ico",
+        "/sailometer-wind/index.html",
+        "/sailometer-wind/main-es2015.f6f527bd585ef99a74d1.js",
+        "/sailometer-wind/main-es5.f6f527bd585ef99a74d1.js",
+        "/sailometer-wind/manifest.webmanifest",
+        "/sailometer-wind/polyfills-es2015.77422263514713f870d6.js",
+        "/sailometer-wind/polyfills-es5.ed2ded9e54ebeafce094.js",
+        "/sailometer-wind/runtime-es2015.cf270aa625fef0e3f692.js",
+        "/sailometer-wind/runtime-es5.cf270aa625fef0e3f692.js",
+        "/sailometer-wind/scripts.e5356de5786c42230c56.js",
+        "/sailometer-wind/styles.888da30ffa711d2eadab.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/sailometer-wind/assets/icons/icon-128x128.png",
+        "/sailometer-wind/assets/icons/icon-144x144.png",
+        "/sailometer-wind/assets/icons/icon-152x152.png",
+        "/sailometer-wind/assets/icons/icon-192x192.png",
+        "/sailometer-wind/assets/icons/icon-384x384.png",
+        "/sailometer-wind/assets/icons/icon-512x512.png",
+        "/sailometer-wind/assets/icons/icon-72x72.png",
+        "/sailometer-wind/assets/icons/icon-96x96.png"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/sailometer-wind/assets/icons/icon-128x128.png": "2337b26cfaadcbf6b86b56a0542fd1916f8fb974",
+    "/sailometer-wind/assets/icons/icon-144x144.png": "62be6846c23387e12adf1421764a023e979c1775",
+    "/sailometer-wind/assets/icons/icon-152x152.png": "271ccc1edd0eab9aab21abed836b836f6a4d4155",
+    "/sailometer-wind/assets/icons/icon-192x192.png": "5d8c8b3349b43390685c334fa80d1b7ee2a6532e",
+    "/sailometer-wind/assets/icons/icon-384x384.png": "ef5c296c69444bd41106b63057cc81823e7a6fc4",
+    "/sailometer-wind/assets/icons/icon-512x512.png": "38c7afd27463face4f57b91b750583b8e682562e",
+    "/sailometer-wind/assets/icons/icon-72x72.png": "97b78969df29b613b9f221b9b3d5fca96f1e5a7a",
+    "/sailometer-wind/assets/icons/icon-96x96.png": "e47cec0ac60109662f1c6aa4a68beec5aa93e46d",
+    "/sailometer-wind/favicon.ico": "28b4f60989453903602f969a798881a0295ca5b5",
+    "/sailometer-wind/index.html": "c9fd80d2f85098c2b9211cb69f95abd76864b8d8",
+    "/sailometer-wind/main-es2015.f6f527bd585ef99a74d1.js": "a5b6a9ea83645959eb28564867b4bedf4765411f",
+    "/sailometer-wind/main-es5.f6f527bd585ef99a74d1.js": "472e2c6ccee90cc6f184450aff42f7b095be5d19",
+    "/sailometer-wind/manifest.webmanifest": "bf910b32cd8c6ffd9b43e09f23ad92f04399b112",
+    "/sailometer-wind/polyfills-es2015.77422263514713f870d6.js": "755a62d7d3c6fd22bc4376ca1e8cf948006a2f50",
+    "/sailometer-wind/polyfills-es5.ed2ded9e54ebeafce094.js": "3d6820c6d73e8de11843b69f9f8a114276efede3",
+    "/sailometer-wind/runtime-es2015.cf270aa625fef0e3f692.js": "23fb5bb73015ede4777b7a2b8e1c366398edc124",
+    "/sailometer-wind/runtime-es5.cf270aa625fef0e3f692.js": "23fb5bb73015ede4777b7a2b8e1c366398edc124",
+    "/sailometer-wind/scripts.e5356de5786c42230c56.js": "c54048cea28750bfed1bbb3c81a39207709eb9e9",
+    "/sailometer-wind/styles.888da30ffa711d2eadab.css": "ee4403e7768fe96cd30f50e04b808d73353f9f2f"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}
